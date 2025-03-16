@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as io;
 import '../lib/application/controllers/auth_controller.dart';
@@ -13,6 +14,9 @@ void main() async {
       .addMiddleware(logRequests())
       .addHandler(authController.router);
 
-  final server = await io.serve(handler, 'localhost', 8080);
-  print('Server running on ${server.address.host}:${server.port}');
+  final host = Platform.environment['HOST'] ?? '0.0.0.0';
+  final port = int.parse(Platform.environment['PORT'] ?? '8080');
+
+  final server = await io.serve(handler, host, port);
+  print('Server running on $host:$port');
 }
